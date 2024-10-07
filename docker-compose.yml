@@ -1,0 +1,6 @@
+﻿services:
+  codenames:
+    image: codenames
+    build:
+      context: .
+      dockerfile: Dockerfile
