@@ -71,6 +71,6 @@ public static class AuthEndpoints
             await httpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
 
             return Results.Ok(new { Message = "Logged out successfully" });
-        });
+        }).RequireAuthorization();
     }
 }
