@@ -1,6 +1,8 @@
 using codenames;
 using codenames.Modules;
 using codenames.Modules.Auth;
+using codenames.Modules.Game;
+using codenames.Modules.Game.DTO;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.EntityFrameworkCore;
 
@@ -11,6 +13,11 @@ builder.Services.AddScoped<IPasswordHasher, PasswordHasher>();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddHealthChecks();
+builder.Services.AddAutoMapper(config =>
+{
+    config.CreateMap<UserInRoom, UserInRoomDTO>();
+    config.CreateMap<Room, RoomDTO>();
+});
 builder.Logging.ClearProviders();
 builder.Logging.AddConsole();
 
@@ -55,13 +62,12 @@ var cookiePolicyOptions = new CookiePolicyOptions
 };
 app.UseCookiePolicy(cookiePolicyOptions);
 
-AuthEndpoints.Map(app);
-
 using (var scope = app.Services.CreateScope())
 {
     var services = scope.ServiceProvider;
     var context = services.GetRequiredService<CodenamesContext>();
     context.Database.EnsureCreated();
+    await context.Database.MigrateAsync();
     // DbInitializer.Initialize(context);
 }
 
@@ -69,9 +75,11 @@ app.UseExceptionHandler(exceptionHandlerApp
     => exceptionHandlerApp.Run(async context
         =>
     {
-        Console.WriteLine("Problem occured");
         await Results.Problem()
             .ExecuteAsync(context);
     }));
+
+AuthEndpoints.Map(app);
+GameEndpoints.Map(app);
 
 app.Run();

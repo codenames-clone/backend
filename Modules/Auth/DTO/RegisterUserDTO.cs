@@ -1,10 +1,14 @@
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 
-namespace codenames.Modules.Auth;
+namespace codenames.Modules.Auth.DTO;
 
-public class LoginUserDTO
+public class RegisterUserDTO
 {
+    [Required(ErrorMessage = "The name is required.")]
+    [StringLength(50)]
+    public string Name { get; set; }
+
     [Required(ErrorMessage = "The email is required.")]
     [EmailAddress(ErrorMessage = "Invalid email format.")]
     public string Email { get; set; }
@@ -16,6 +20,6 @@ public class LoginUserDTO
 
     public override string ToString()
     {
-        return $"LoginUserDTO(Email: {Email})";
+        return $"RegisterUserDTO(Name: {Name}, Email: {Email})";
     }
 }
