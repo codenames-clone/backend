@@ -1,6 +1,19 @@
 ﻿services:
-  codenames:
-    image: codenames
-    build:
-      context: .
-      dockerfile: Dockerfile
+#  codenames:
+#    image: codenames
+#    build:
+#      context: .
+#      dockerfile: Dockerfile
+  postgres:
+    image: postgres:17-alpine
+    environment:
+      POSTGRES_USER: codenames
+      POSTGRES_PASSWORD: codenames
+      POSTGRES_DB: codenames
+    ports:
+        - "5432:5432"
+    volumes:
+        - pgdata:/var/lib/postgresql/data
+
+volumes:
+  pgdata:
